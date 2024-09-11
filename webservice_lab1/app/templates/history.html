@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature & Humidity History</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Gadget', sans-serif;
+            background-color: #aaf0d1;
+            color: #2b2f3a;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+
+        .container {
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 26px;
+            color: #2b2f3a;
+            margin-bottom: 20px;
+            font-weight: bolder;
+        }
+
+        .table {
+            background-color: #f3f4f6;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            text-align: center;
+            padding: 10px;
+        }
+
+        th {
+            background-color: #2b2f3a;
+            color: #ffffff;
+        }
+
+        td {
+            color: #2b2f3a;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            background-color: #3b82f6;
+            font-size: 1rem;
+            font-weight: bolder;
+            text-align: center;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-container input[type="date"] {
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #2b2f3a;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #2b2f3a;
+        }
+
+        .search-container input[type="submit"] {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3b82f6;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .search-container input[type="submit"]:hover {
+            background-color: #2b6db2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Temperature & Humidity History</h1>
+        <form class="search-container" method="get" action="/history/">
+            <input type="date" name="date" value="{{ date_query }}" required>
+            <input type="submit" value="Search">
+            <a href="/temperature-monitor/" class="nav-btn">Back</a>
+        </form>
+    </header>
+
+    <div class="container">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Temperature (°C)</th>
+                    <th>Humidity (%)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reading in readings %}
+                    <tr>
+                        <td>{{ reading.timestamp }}</td>
+                        <td>{{ reading.temperature }}</td>
+                        <td>{{ reading.humidity }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3">No readings available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
