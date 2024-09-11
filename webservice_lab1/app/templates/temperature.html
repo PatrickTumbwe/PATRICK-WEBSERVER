@@ -11,82 +11,112 @@
     <!-- Date Adapter -->
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Poppins:wght@300;600&display=swap');
+    
         body {
-            font-family: 'Gadget', sans-serif;
-            background-color: #aaf0d1;
-            color: #2b2f3a;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
             margin: 0;
             padding: 20px;
         }
-
+    
         .container {
-            padding: 20px;
+            padding: 40px;
             border-radius: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(135deg, #fdfdfd, #f0f0f0);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         }
-
+    
         h1 {
-            font-size: 26px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
             text-align: center;
-            color: #2b2f3a;
-            margin-bottom: 20px;
-            font-weight: bolder;
+            color: #37474f;
+            margin-bottom: 30px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-
+    
         .card {
-            background-color: #f3f4f6;
-            border: none;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            background-color: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            padding: 25px;
+            transition: box-shadow 0.3s ease;
         }
-
+    
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    
         .card-title {
-            color: #2b2f3a;
-            font-size: 20px;
-            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            color: #546e7a;
+            font-size: 24px;
+            margin-bottom: 15px;
             text-align: center;
-            font-weight: bold;
+            font-weight: 600;
         }
-
+    
         .value-box {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 20px;
         }
-
+    
         #temperatureValue, #humidityValue {
-            font-size: 30px;
-            font-weight: bolder;
-            color: #10b981;
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: #ff5722;
         }
-
+    
         .chart-box {
-            padding: 10px;
-            border-radius: 12px;
-            background-color: #f3f4f6;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-
+    
         canvas {
-            display: 100% !important;
-            height: 500px !important;
+            display: block;
+            width: 100% !important;
+            height: 350px !important;
         }
-
+    
         #datetime {
             text-align: center;
-            font-size: 20px;
-            margin-top: 20px;
-            color: #2b2f3a;
+            font-size: 18px;
+            margin-top: 30px;
+            color: #78909c;
         }
-
+    
         .text-center.mt-4 {
-            margin-top: 20px;
+            margin-top: 40px;
         }
-
+    
         .btn-primary {
-            background-color: #3b82f6;
-            border-color: #3b82f6;
-            font-weight: bold;
+            background-color: #8e44ad;
+            border-color: #7e3794;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            padding: 12px 30px;
+            border-radius: 30px;
+            color: white;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+        }
+    
+        .btn-primary:hover {
+            background-color: #732d91;
+            border-color: #5d236f;
         }
     </style>
+    
+    
 </head>
 <body>
     <div class="container mt-5">
