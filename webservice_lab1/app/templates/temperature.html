@@ -38,9 +38,60 @@
             letter-spacing: 2px;
             text-transform: uppercase;
         }
-
+    
+        .card {
+            background-color: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            padding: 25px;
+            transition: box-shadow 0.3s ease;
+        }
+    
+        .card:hover {
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+    
         .card-title {
+            font-family: 'Poppins', sans-serif;
+            color: #546e7a;
             font-size: 24px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+    
+        .value-box {
+            text-align: center;
+            margin-top: 20px;
+        }
+    
+        #temperatureValue, #humidityValue {
+            font-family: 'Poppins', sans-serif;
+            font-size: 36px;
+            font-weight: 600;
+            color: #ff5722;
+        }
+    
+        .chart-box {
+            padding: 20px;
+            border-radius: 15px;
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        canvas {
+            display: block;
+            width: 100% !important;
+            height: 350px !important;
+        }
+    
+        #datetime {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 30px;
+            color: #78909c;
         }
     
         .text-center.mt-4 {
@@ -64,38 +115,75 @@
             border-color: #5d236f;
         }
 
-        /* Text input style */
-        .text-input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
+        /* Style for the toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-top: 20px;
+            text-align: center;
         }
 
-        /* Message style */
-        .message {
-            font-size: 18px;
-            font-weight: 600;
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4caf50;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Style for the text box */
+        #codeInput {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #8e44ad;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        #codeMessage {
+            font-size: 16px;
             color: red;
             text-align: center;
-            margin-top: 10px;
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="container mt-5">
         <h1>Temperature & Humidity</h1>
-
-        <!-- Code input field -->
-        <div class="text-center">
-            <h5 class="card-title">Enter Code to Control Relay</h5>
-            <input type="text" id="codeInput" class="text-input" placeholder="Enter code (patrick to turn ON, sakala to turn OFF)">
-            <button id="submitButton" class="btn btn-primary mt-3">Submit</button>
-            <p id="message" class="message"></p>
-        </div>
-
+        
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">Temperature</h5>
@@ -119,6 +207,28 @@
                 </div>
             </div>
         </div>
+
+        <!-- Toggle Switch for Relay Control -->
+        <div class="text-center">
+            <label class="switch">
+                <input type="checkbox" id="relayToggle">
+                <span class="slider"></span>
+            </label>
+            <p>Toggle Relay</p>
+        </div>
+
+        <!-- Textbox to enter code for relay control -->
+        <div class="text-center">
+            <input type="text" id="codeInput" placeholder="Enter relay control code">
+            <p id="codeMessage">Wrong code!</p>
+        </div>
+
+        <p id="datetime"></p>
+
+        <!-- Button to Redirect to History Page -->
+        <div class="text-center mt-4">
+            <button id="historyButton" class="btn btn-primary">View History</button>
+        </div>
     </div>
 
     <!-- jQuery and dependencies (Bootstrap JS) -->
@@ -135,46 +245,85 @@
         }
         setInterval(updateDateTime, 1000);
 
-        // Relay control logic
-        function controlRelay(code) {
-            if (code === "patrick") {
-                document.getElementById("message").innerText = "Relay turned ON!";
-                // Add logic to turn relay ON
-            } else if (code === "sakala") {
-                document.getElementById("message").innerText = "Relay turned OFF!";
-                // Add logic to turn relay OFF
+        // Function to handle code input for relay control
+        function handleCodeInput() {
+            var codeInput = document.getElementById('codeInput').value.toLowerCase();
+            var codeMessage = document.getElementById('codeMessage');
+            var relayToggle = document.getElementById('relayToggle');
+
+            if (codeInput === "patrick") {
+                relayToggle.checked = true;  // Turn on the relay
+                codeMessage.style.display = "none";
+            } else if (codeInput === "sakala") {
+                relayToggle.checked = false;  // Turn off the relay
+                codeMessage.style.display = "none";
             } else {
-                document.getElementById("message").innerText = "Wrong code!";
+                codeMessage.style.display = "block";  // Show wrong code message
             }
         }
 
-        // Event listener for submit button
-        document.getElementById("submitButton").addEventListener("click", function() {
-            var code = document.getElementById("codeInput").value.toLowerCase();
-            controlRelay(code);
+        // Listen for Enter key press to trigger relay control
+        document.getElementById('codeInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleCodeInput();
+            }
         });
 
-        // Example chart updates (dummy data for testing)
-        function updateCharts(temperature, humidity, time) {
-            temperatureChart.data.labels.push(time);
-            temperatureChart.data.datasets[0].data.push(temperature);
-            temperatureChart.update();
+        // Initialize temperature chart
+        var temperatureChart = new Chart(document.getElementById('temperatureChart'), {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Temperature',
+                    borderColor: '#ff5722',
+                    fill: false,
+                    data: [],
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 50
+                    }
+                }
+            }
+        });
 
-            humidityChart.data.labels.push(time);
-            humidityChart.data.datasets[0].data.push(humidity);
-            humidityChart.update();
-
-            document.getElementById('temperatureValue').innerText = temperature + ' °C';
-            document.getElementById('humidityValue').innerText = humidity + ' %';
-        }
-
-        // Dummy data update for testing charts
-        setInterval(function() {
-            var temperature = (Math.random() * 10 + 20).toFixed(2);  // Random temp between 20 and 30
-            var humidity = (Math.random() * 20 + 40).toFixed(2);    // Random humidity between 40 and 60
-            var now = new Date().toLocaleTimeString();
-            updateCharts(temperature, humidity, now);
-        }, 2000);
+        // Initialize humidity chart
+        var humidityChart = new Chart(document.getElementById('humidityChart'), {
+            type: 'line',
+            data: {
+                datasets: [{
+                    label: 'Humidity',
+                    borderColor: '#42a5f5',
+                    fill: false,
+                    data: [],
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
